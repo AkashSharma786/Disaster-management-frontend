@@ -11,6 +11,8 @@ function  DisasterReportPage() {
 
    const handleSubmit = async  (disasterType: string, location: string, severity: string, disasterDate: string) => {
     
+
+    
     console.log(
       JSON.stringify(
           {
