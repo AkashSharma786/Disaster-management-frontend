@@ -1,6 +1,7 @@
-import './RegistrationPage.css';
+
 import { useState } from 'react';
-import districtsData from './assets/Districts.json';
+import districtsData from '../assets/Districts.json';
+import { Link } from 'react-router';
 
 
 function RegistrationPage() {
@@ -30,7 +31,14 @@ function RegistrationPage() {
             return;
         }
 
-        if(firstName.trim() === '' || lastName.trim() === '' || role.trim() === '' || email.trim() === '' || stateOrUT.trim() === '' || district.trim() === '' || phoneNumber.trim() === '' || password.trim() === '') {
+        if(firstName.trim() === '' 
+            ||lastName.trim() === '' 
+            ||role.trim() === '' 
+            ||email.trim() === '' 
+            ||stateOrUT.trim() === '' 
+            ||district.trim() === '' 
+            ||phoneNumber.trim() === '' 
+            ||password.trim() === '') {
             alert('Please fill in all fields!');
             return;
         }
@@ -71,7 +79,13 @@ function RegistrationPage() {
     return (
     <>
     <div className="container">
-        <h1>Register</h1>
+
+        <div className="header">
+            
+            <h1>Register</h1>
+
+        </div>
+        
 
             <div className="form-group">
                 <label htmlFor='firstName'>First Name</label>
@@ -157,7 +171,7 @@ function RegistrationPage() {
             
             <div className="form-group">
                 <label htmlFor="loginLink">Already have an account? 
-                    <a href="/login">Login here</a>
+                    <Link to="/login">Login here</Link>
                 </label>
             </div>
        

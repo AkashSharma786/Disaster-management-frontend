@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import './DisasterReport.css'
+
 
 function  DisasterReportPage() {
 
