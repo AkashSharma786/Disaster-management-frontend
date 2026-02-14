@@ -5,7 +5,8 @@ import districtsData from './assets/Districts.json';
 
 function RegistrationPage() {
 
-    const [username, setUsername] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [role, setRole] = useState('');
     const [email, setEmail] = useState('');
     const [district, setDistrict] = useState('');
@@ -28,11 +29,18 @@ function RegistrationPage() {
             alert('Passwords do not match!');
             return;
         }
+
+        if(firstName.trim() === '' || lastName.trim() === '' || role.trim() === '' || email.trim() === '' || stateOrUT.trim() === '' || district.trim() === '' || phoneNumber.trim() === '' || password.trim() === '') {
+            alert('Please fill in all fields!');
+            return;
+        }
         const registrationData = {
-            username,
+            firstName,
+            lastName,
             role,
             email,
-            location,
+            stateOrUT,
+            district,
             phoneNumber,
             password
         };
@@ -67,12 +75,12 @@ function RegistrationPage() {
 
             <div className="form-group">
                 <label htmlFor='firstName'>First Name</label>
-                <input type="text" id="firstName" name="firstName" placeholder="Enter first name" value={username} onChange={(e) => setUsername(e.target.value)} required></input>
+                <input type="text" id="firstName" name="firstName" placeholder="Enter first name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required></input>
             </div>
 
             <div className="form-group">
                 <label htmlFor='lastName'>Last Name</label>
-                <input type="text" id="lastName" name="lastName" placeholder="Enter last name" value={username} onChange={(e) => setUsername(e.target.value)} required></input>
+                <input type="text" id="lastName" name="lastName" placeholder="Enter last name" value={lastName} onChange={(e) => setLastName(e.target.value)} required></input>
             </div>
         
             <div className="form-group">
@@ -141,7 +149,7 @@ function RegistrationPage() {
             
             <div className="form-group">
             <button type="submit"   onClick={()=>{
-                console.log(username, password, email, location, role, phoneNumber);
+                console.log(firstName, lastName, password, email, stateOrUT, district, role, phoneNumber);
                 handleSubmit();
             }}
             >Submit</button>
