@@ -1,10 +1,10 @@
 
 import { useState } from 'react';
-import districtsData from '../assets/Districts.json';
+import districtsData from '../../assets/Districts.json';
 import { Link } from 'react-router';
 
 
-function RegistrationPage() {
+function Registration() {
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -181,4 +181,4 @@ function RegistrationPage() {
 
 }
 
-export default RegistrationPage
+export default Registration

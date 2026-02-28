@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 
-function LoginPage(){
+function Login(){
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -61,4 +61,4 @@ function LoginPage(){
     </>);
 }
 
-export default LoginPage;
+export default Login;
