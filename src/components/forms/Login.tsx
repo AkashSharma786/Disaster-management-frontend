@@ -1,7 +1,14 @@
+import axios from 'axios';
 import { useState } from 'react';
-import { Link } from 'react-router';
-
+import { Link, useNavigate } from 'react-router';
+import { parseAuthToken } from '../common/parseAuthToken';
+import { useDispatch } from 'react-redux';
+import { setUserInfo } from '../../redux/slices/auth';
+import '../../assets/styles/container/formContainer.css';
+import saveStateAndDistricts from '../../utils/saveStateAndDistricts';
 function Login(){
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -11,29 +18,52 @@ function Login(){
             alert('Please fill in all fields!');
             return;
         }
-        try {
-            const response = await fetch('http://localhost:8080/login', {
-                method: 'POST',
-                headers: {
+        
 
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            }); 
-            if (response.ok) {
-                alert('Login successful!');
-            }
-            else {
-                alert('Login failed!');
-            }
-        } catch (error) {
-            console.error('Error during login:', error);
-        }   
-    };
+            const response = axios.post('http://localhost:8080/api/auth/login', { username: email, password :password })
+            .then(response => {
+                console.log(response.data); 
+
+
+                if(response.status === 200) {  
+                    
+                    console.log(response.status);
+                    localStorage.setItem('token', response.data);
+                        const userInfo = parseAuthToken(response.data);
+
+                        if (userInfo != null) {
+                            console.log(userInfo);
+                            dispatch(setUserInfo(userInfo));
+                            console.log('User info set in Redux store:', userInfo);
+                            console.log(userInfo.role.toLowerCase())
+                            
+                            navigate(`/${userInfo.role.toLowerCase()}`);
+                          
+                        }
+
+                    
+                    
+                    
+                    alert('Login successful!');
+                    
+                   
+                }
+                
+            })
+            .catch(error => {
+                
+                alert('Login failed! Please check your credentials and try again.');
+                console.log('Error during login:', error);
+            });
+
+            
+        
+    }
+    
 
     return(<>
 
-    <div className="container">
+    <div className="container form-container">
 
             <div className="header">
                  <h2>Login</h2>
@@ -50,7 +80,7 @@ function Login(){
             </div>
 
             <div className="form-group">
-                <button type="submit" onClick={handleLogin}>Login</button>
+                <button className='button' type="submit" onClick={handleLogin}>Login</button>
             </div>
 
             <div>

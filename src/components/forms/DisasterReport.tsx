@@ -93,7 +93,7 @@ function  DisasterReportPage() {
                 <input type="text" value={disasterDate} onChange={(e)=> setDisasterDate(e.target.value)} id="disasterDate" name="disasterDate" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" required></input>
             </div>
 
-            <button type="submit" onClick={async (e) => { await handleSubmit(disasterType, location, severity, disasterDate)}}
+            <button className='button' type="submit" onClick={async (e) => { await handleSubmit(disasterType, location, severity, disasterDate)}}
             >Submit</button>
        
     </div>

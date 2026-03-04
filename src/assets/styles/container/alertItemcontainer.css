@@ -1,0 +1,10 @@
+.alert-item-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    width: 80%;
+    height: 90%;
+    border-bottom: 1px solid var(--background-color);
+    flex-direction: column;
+    gap: 10px;
+}

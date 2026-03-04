@@ -1,10 +1,11 @@
 import { Routes, Route } from 'react-router';
 import Login from '../components/forms/Login';
 import Registration from '../components/forms/Registration';
-import AdminPage from '../pages/admin';
-import ResidentPage from '../pages/resident';
-import RespondentPage from '../pages/respondent';
+
 import AuthRoute from '../components/common/AuthRoute';
+import Admin from '../pages/admin';
+import Resident from '../pages/resident';
+import Respondent from '../pages/respondent';
 
 
 function AppRoutes() {
@@ -19,9 +20,9 @@ function AppRoutes() {
 
             <Route path='/login' element={<Login />} />
             <Route path="/register" element={<Registration />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/resident" element={<ResidentPage />} />
-            <Route path="/respondent" element={<RespondentPage />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/resident" element={<Resident />} />
+            <Route path="/respondent" element={<Respondent />} />
 
 
 

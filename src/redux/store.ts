@@ -1,9 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userSlice from "./slices/user";
+import authSlice from "./slices/auth";
+import districtSlice from "./slices/districts";
+import stateOrUtSlice from "./slices/stateOrUt";
 
 const store = configureStore({
     reducer: {
-        user: userSlice.reducer,
+        auth: authSlice.reducer,
+        districts: districtSlice.reducer,
+        stateOrUts: stateOrUtSlice.reducer,
     },
 });
 

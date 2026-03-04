@@ -1,0 +1,11 @@
+.form-container{
+    background-color: var(--background-color);
+    padding: 20px;
+    width: min(600px, 100%);
+    display: flex;
+    flex-wrap: wrap;
+    align-items:end;
+    justify-content:space-between;
+   
+    
+}
