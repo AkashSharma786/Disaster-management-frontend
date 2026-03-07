@@ -1,81 +1,99 @@
 import AlertItemCard from "../Cards/AlertItemCard";
 import '../../assets/styles/container/alertItemcontainer.css';
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { setAlerts, setIsSaved, setStateId } from "../../redux/slices/alert";
+import { getAlerts, getSavedAlerts } from "../../services/alertService";
+export interface AlertCardProp {
+    alertItem: any;
+
+    index: number;
+
+}
 
 function AlertItemContainer() {
 
     const stateOrUtList = useSelector((state: any) => state.stateOrUts.stateOrUtList);
+    const alerts = useSelector((state: any) => state.alerts.alerts);
+    const isSaved = useSelector((state: any) => state.alerts.isSaved);
+    const selectedStateOrUt = useSelector((state: any) => state.alerts.stateId);
+
+    const dispatch = useDispatch();
+
     const [alertType, setAlertType] = useState('ndma');
-    const [selectedStateOrUT, setSelectedStateOrUT] = useState(0);
-    const [alertItems, setAlertItems] = useState( []);
 
-    
 
-    function handleAlertGet(event: any) {
-        axios.get(`http://localhost:8080/admin/ndma-alerts/${selectedStateOrUT}/alerts`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-            
-            .then(response => {
-                console.log(response.data);
-                setAlertItems(response.data);
-                // Handle the response data as needed
-                response.status
-            })
-            .catch(error => {
-                if(error.response?.status){
-                    alert("JWT expired Logout and login again");
-                }
-                else{
-                    console.error('Error fetching alerts:', error);
-                }
-                
-        
-                
-                
-                // Handle the error as needed
-            });
+   async function handleAlertGet() {
 
-        
+        if (alertType === 'ndma'){
+            let alertsData = await getAlerts(selectedStateOrUt)
+          
+           
+            if(alertsData != null)
+                dispatch(setAlerts(alertsData))
+            dispatch(setIsSaved(false))
+
+        }
+        else{
+           let  alertsData = await getSavedAlerts();
+           if(alertsData != null){
+               dispatch(setAlerts(alertsData))
+               console.log(alertsData);
+
+           }
+            dispatch(setIsSaved(true))
+
+        }
+
+
+
+
+
+       
     }
+
+
+
+
 
     console.log(stateOrUtList);
 
 
     return (
         <div className="container alert-item-container">
-            <div className="container header">
+            <div className="container viewer-box">
+
+                
 
                 <select value={alertType} onChange={(e) => setAlertType(e.target.value)}    >
                     <option value="ndma">NDMA Alerts</option>
                     <option value="saved"> Saved</option>
 
                 </select>
-
-
-                <select value={selectedStateOrUT} onChange={(e) => setSelectedStateOrUT(Number.parseInt(e.target.value))}    >
+                {
+                    (alertType === "ndma")?<select value={selectedStateOrUt} onChange={(e) => dispatch(setStateId(Number.parseInt(e.target.value)))}    >
                     <option value={0}>Select State/UT</option>
                     {stateOrUtList.map((stateOrUTName: any) => <option key={stateOrUTName.id} value={stateOrUTName.id}>{stateOrUTName.name}</option>
                     )}
 
-                </select>
+                </select>:null
+                }
+
+                
                 <button className="button" onClick={handleAlertGet}> Get</button>
 
             </div>
 
             {
-                alertItems.map((item, index) =>{
-                  
-                    return <AlertItemCard key={index} alert={item}/>
+                alerts.map((item: any, index: number) => {
+
+                    return <AlertItemCard key={index} alertItem={item} index={index} />
                 })
             }
 
 
-            
+
 
 
 
