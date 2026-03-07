@@ -105,3 +105,18 @@ select:focus {
 .button:active {
     background-color: var(--primary-color-dark);
 }
+
+.logout{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--error-color-light);
+
+    
+}
+.logout:hover{
+    background-color: var(--error-color);
+}
+.logout:active{
+    background-color: var(--error-color-light);
+}

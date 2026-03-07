@@ -1,0 +1,16 @@
+.users-container{
+    display: flex;
+    flex-direction: row;
+ 
+    flex-wrap: wrap;
+    width: 70%;
+    
+}
+
+.user-viewer{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    width: 70%;
+
+}

@@ -1,0 +1,41 @@
+.admin-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var( --secondary-color-dark);
+  padding: 14px 30px;
+  border-radius: 10px;
+  color: var(--on-secondary-color);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  margin-bottom: 10px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: var(--on-secondary-color);
+  font-size: 20px;
+  transition: 0.3s;
+  padding-bottom: 4px;
+}
+
+.nav-item:hover {
+  color: white;
+}
+
+.nav-item.active {
+  color: #60a5fa;
+  border-bottom: 2px solid #60a5fa;
+}
+
