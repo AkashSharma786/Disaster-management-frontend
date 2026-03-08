@@ -12,7 +12,33 @@ function UsersContainer(){
     const users = useSelector((state:any)=> state.users.usersList)
 
     function handleGet(){
-        axios.get("http://localhost:8080/admin/users",{
+        let allUserUri = "http://localhost:8080/admin/users";
+        let adminUserUri = "http://localhost:8080/admin/admins";
+        let residentsUri = "http://localhost:8080/admin/residents";
+        let respondersUri = "http://localhost:8080/admin/responders";
+
+       let uri = ""
+        switch(userRole) {
+            case 0:
+                uri = allUserUri;
+                break;
+                
+            case 1:
+                uri= adminUserUri;
+                break;
+                
+            case 2:
+                uri= residentsUri;
+                break;
+                
+            case 3:
+                uri= respondersUri;
+               
+        
+            default:
+                break;
+        }
+        axios.get(uri,{
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }})

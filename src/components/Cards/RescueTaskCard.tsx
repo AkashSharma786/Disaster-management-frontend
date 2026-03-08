@@ -1,0 +1,57 @@
+import '../../assets/styles/cards/RescueTaskCard.css'
+
+export function RescueTaskCard({rescueTask}:any){
+
+    return (<>
+    <div className="container rescue-task-card">
+        <div>
+            <h2>{rescueTask.message}</h2>
+        </div>
+        
+        <h2>Alert</h2>
+        <div className="container">
+            
+            <h3><strong>Id:  {rescueTask.alertItem.id}</strong></h3>
+            <h3>{rescueTask.alertItem.message}</h3>
+
+        </div>
+        <h2>Responders</h2>
+        <div className='container responders-container'>
+            <div className='responder-box'>
+                <p>Id: <strong>{rescueTask.volunteers[0].id}</strong></p>
+                <p>Name: <strong>{rescueTask.volunteers[0].firstName} {rescueTask.volunteers[0].lastName} </strong></p>
+
+            </div>
+            <div className='responder-box'>
+                <p>Id: <strong>{rescueTask.volunteers[0].id}</strong></p>
+                <p>Name: <strong>{rescueTask.volunteers[0].firstName} {rescueTask.volunteers[0].lastName} </strong></p>
+
+            </div>
+            <div className='responder-box'>
+                <p>Id: <strong>{rescueTask.volunteers[0].id}</strong></p>
+                <p>Name: <strong>{rescueTask.volunteers[0].firstName} {rescueTask.volunteers[0].lastName} </strong></p>
+
+            </div>
+            <div className='responder-box'>
+                <p>Id: <strong>{rescueTask.volunteers[0].id}</strong></p>
+                <p>Name: <strong>{rescueTask.volunteers[0].firstName} {rescueTask.volunteers[0].lastName} </strong></p>
+
+            </div>
+            
+   
+        
+        </div>
+        <div className='button-box'>
+            <button className='button delete-button'>Delete</button>
+            <button className='button'>Edit</button>
+        </div>
+        
+
+        
+        
+
+    </div>
+    
+    </>)
+
+}
