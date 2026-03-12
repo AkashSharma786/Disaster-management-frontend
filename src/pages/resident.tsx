@@ -1,8 +1,15 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setUserInfo } from "../redux/slices/auth";
+import ResidentContainer from "../components/containers/ResidentContainer";
+import { Client } from "@stomp/stompjs";
 
 
 function Resident() {
+
+    
+
+     
+
 const dispatch = useDispatch();
 
     const auth = useSelector((state: any) => state.auth);
@@ -18,6 +25,7 @@ const dispatch = useDispatch();
 
     return (<>
     <h1>Resident Page</h1>
+    <ResidentContainer/>
      <button className="button" onClick={handleLogout}>Logout</button>
     </>);
 }

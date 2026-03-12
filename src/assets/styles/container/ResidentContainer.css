@@ -1,0 +1,9 @@
+.resident-container{
+    width: 50vw;
+    height: 80vh;
+    overflow-y: auto;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+
+}

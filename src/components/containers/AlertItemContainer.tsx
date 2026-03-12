@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { setAlerts, setIsSaved, setStateId } from "../../redux/slices/alert";
 import { getAlerts, getSavedAlerts } from "../../services/alertService";
+import { Client } from "@stomp/stompjs";
 export interface AlertCardProp {
     alertItem: any;
 
     index: number;
+    stompClient: Client | null
 
 }
 
@@ -19,29 +21,68 @@ function AlertItemContainer() {
     const isSaved = useSelector((state: any) => state.alerts.isSaved);
     const selectedStateOrUt = useSelector((state: any) => state.alerts.stateId);
 
+    const [stompClient, setStompClient] = useState<Client | null>(null);
+
+    useEffect(() => {
+        const stompClient = new Client({
+            brokerURL: `ws://localhost:8080/websocket?token=${localStorage.getItem("token")}`,
+            onWebSocketError: (error) => {
+                console.error('Error with websocket');
+                stompClient.deactivate()
+                alert("Error occurred with connecting with web socket Try login again")
+
+            },
+
+            onStompError: (frame) => {
+                console.error('Broker reported error: ' + frame.headers['message']);
+                console.error('Additional details: ' + frame.body);
+                stompClient.deactivate()
+                alert("Error occurred with connecting with web socket Try login again")
+            },
+            onUnhandledFrame: (frame) => {
+                console.error("Unhandled STOMP frame", frame);
+                stompClient.deactivate();
+                alert("Error occurred with connecting with web socket Try login again")
+
+            }
+
+
+
+        })
+
+        stompClient.activate();
+
+        setStompClient(stompClient);
+
+    }, [])
+
+
+
+
+
     const dispatch = useDispatch();
 
     const [alertType, setAlertType] = useState('ndma');
 
 
-   async function handleAlertGet() {
+    async function handleAlertGet() {
 
-        if (alertType === 'ndma'){
+        if (alertType === 'ndma') {
             let alertsData = await getAlerts(selectedStateOrUt)
-          
-           
-            if(alertsData != null)
+
+
+            if (alertsData != null)
                 dispatch(setAlerts(alertsData))
             dispatch(setIsSaved(false))
 
         }
-        else{
-           let  alertsData = await getSavedAlerts();
-           if(alertsData != null){
-               dispatch(setAlerts(alertsData))
-               console.log(alertsData);
+        else {
+            let alertsData = await getSavedAlerts();
+            if (alertsData != null) {
+                dispatch(setAlerts(alertsData))
+                console.log(alertsData);
 
-           }
+            }
             dispatch(setIsSaved(true))
 
         }
@@ -50,7 +91,7 @@ function AlertItemContainer() {
 
 
 
-       
+
     }
 
 
@@ -64,7 +105,7 @@ function AlertItemContainer() {
         <div className="container alert-item-container">
             <div className="container viewer-box">
 
-                
+
 
                 <select value={alertType} onChange={(e) => setAlertType(e.target.value)}    >
                     <option value="ndma">NDMA Alerts</option>
@@ -72,15 +113,15 @@ function AlertItemContainer() {
 
                 </select>
                 {
-                    (alertType === "ndma")?<select value={selectedStateOrUt} onChange={(e) => dispatch(setStateId(Number.parseInt(e.target.value)))}    >
-                    <option value={0}>Select State/UT</option>
-                    {stateOrUtList.map((stateOrUTName: any) => <option key={stateOrUTName.id} value={stateOrUTName.id}>{stateOrUTName.name}</option>
-                    )}
+                    (alertType === "ndma") ? <select value={selectedStateOrUt} onChange={(e) => dispatch(setStateId(Number.parseInt(e.target.value)))}    >
+                        <option value={0}>Select State/UT</option>
+                        {stateOrUtList.map((stateOrUTName: any) => <option key={stateOrUTName.id} value={stateOrUTName.id}>{stateOrUTName.name}</option>
+                        )}
 
-                </select>:null
+                    </select> : null
                 }
 
-                
+
                 <button className="button" onClick={handleAlertGet}> Get</button>
 
             </div>
@@ -88,7 +129,7 @@ function AlertItemContainer() {
             {
                 alerts.map((item: any, index: number) => {
 
-                    return <AlertItemCard key={index} alertItem={item} index={index} />
+                    return <AlertItemCard key={index} alertItem={item} index={index} stompClient={stompClient} />
                 })
             }
 

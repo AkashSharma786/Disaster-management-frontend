@@ -5,46 +5,67 @@ import { useState } from "react";
 import type { AlertCardProp } from '../containers/AlertItemContainer';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import {  deleteSavedAlert, saveAlert } from '../../services/alertService';
+import { deleteSavedAlert, saveAlert } from '../../services/alertService';
 import { deleteAlert } from '../../redux/slices/alert';
+import { Client } from '@stomp/stompjs';
 
-const AlertItemCard = ({alertItem,  index }:AlertCardProp) => {
-  const stateId = useSelector((state:any)=> state.alerts.stateId);
-  const isSaved = useSelector((state:any)=> state.alerts.isSaved);
-
+const AlertItemCard = ({ alertItem, index , stompClient}: AlertCardProp) => {
+  const stateId = useSelector((state: any) => state.alerts.stateId);
+  const isSaved = useSelector((state: any) => state.alerts.isSaved);
+   
+  if(alertItem == null)
+  {
+    return 
+  }
   const dispatch = useDispatch();
-
-  
-
   const [expanded, setExpanded] = useState(false);
 
-  
- 
-   function handleSave(){
+  function handleSave() {
 
     saveAlert(stateId, index)
-    .then(data=>{
-      alert(data);
-    })
-    .catch(e=>{
-      console.error(e)
-    })
-    
+      .then(data => {
+        alert(data);
+      })
+      .catch(e => {
+        console.error(e)
+      })
+
   }
 
-  function handleDelete(){
+  function handleDelete() {
 
     dispatch(deleteAlert(alertItem.id))
 
     deleteSavedAlert(alertItem.id)
 
-    .then(data=>{
-      alert(data);
-    })
-    .catch(e=>{
-      console.error(e)
-    })
-   
+      .then(data => {
+        alert(data);
+      })
+      .catch(e => {
+        console.error(e)
+      })
+
+
+  }
+
+  function handleBroadcast() {
+
+    if(isSaved)
+    {
+      console.log(alertItem.id)
+      if(stompClient != null)
+      stompClient.publish({
+      destination: `/app/alerts/${alertItem.id}`
+      });
+    }
+    
+
+
+
+
+
+
+
 
   }
 
@@ -54,7 +75,7 @@ const AlertItemCard = ({alertItem,  index }:AlertCardProp) => {
 
   return (
     <div className='container card'>
-      
+
       {/* Top Section (Always Visible) */}
       <div className='header'>
         <div>
@@ -65,34 +86,34 @@ const AlertItemCard = ({alertItem,  index }:AlertCardProp) => {
         </div>
 
         <div className='button-box'>
-          
-          
-        <button onClick={toggleCard} className='arrow-btn'>
-        {
-            expanded ?  <SlArrowDown/>: <SlArrowRight/>
-            
-        }
-          
-        </button>
-        {
-          (isSaved)?
-           <button className='button delete-button' onClick={handleDelete}> Delete </button>
-           :<button className='button ' onClick={handleSave}> save</button>
-        }
-       
 
-        <button className='button broadcast-button'> broadcast</button>
+
+          <button onClick={toggleCard} className='arrow-btn'>
+            {
+              expanded ? <SlArrowDown /> : <SlArrowRight />
+
+            }
+
+          </button>
+          {
+            (isSaved) ?
+              <button className='button delete-button' onClick={handleDelete}> Delete </button>
+              : <button className='button ' onClick={handleSave}> save</button>
+          }
+
+
+          <button className='button broadcast-button' onClick={handleBroadcast}> broadcast</button>
 
         </div>
 
-        
+
       </div>
 
       {/* Expandable Section */}
       {expanded && (
         <div className='extra-info'>
           {
-            isSaved? <p><strong>Id:</strong>{alertItem.id}</p>: null
+            isSaved ? <p><strong>Id:</strong>{alertItem.id}</p> : null
           }
           <p><strong>Event:</strong> {alertItem.event}</p>
           <p><strong>Severity:</strong> {alertItem.severity}</p>
