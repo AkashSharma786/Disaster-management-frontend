@@ -5,6 +5,8 @@ import stateOrUtSlice from "./slices/stateOrUt";
 import alertSlice from "./slices/alert";
 import userSlice from "./slices/users";
 import rescueTaskSlice from "./slices/rescueTask";
+import helpRequestSlice from "./slices/helpRequests";
+import reportSlice from "./slices/reportSlice";
 
 const store = configureStore({
     reducer: {
@@ -13,7 +15,9 @@ const store = configureStore({
         stateOrUts: stateOrUtSlice.reducer,
         alerts: alertSlice.reducer,
         users: userSlice.reducer,
-        rescueTask: rescueTaskSlice.reducer
+        rescueTask: rescueTaskSlice.reducer,
+        helpRequests: helpRequestSlice.reducer,
+        reports: reportSlice.reducer
     },
 });
 

@@ -4,6 +4,7 @@ import UserCard from "../Cards/UsersCard";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../../redux/slices/users";
+import { getAdmins, getAllUsers, getResidents, getResponders } from "../../services/userService";
 
 function UsersContainer(){
 
@@ -12,39 +13,33 @@ function UsersContainer(){
     const users = useSelector((state:any)=> state.users.usersList)
 
     function handleGet(){
-        let allUserUri = "http://localhost:8080/admin/users";
-        let adminUserUri = "http://localhost:8080/admin/admins";
-        let residentsUri = "http://localhost:8080/admin/residents";
-        let respondersUri = "http://localhost:8080/admin/responders";
+        
 
-       let uri = ""
+        let users:Promise<any> = getAllUsers();
+       
         switch(userRole) {
             case 0:
-                uri = allUserUri;
+                users = getAllUsers();
                 break;
                 
             case 1:
-                uri= adminUserUri;
+                users = getAdmins();
                 break;
                 
             case 2:
-                uri= residentsUri;
+                users = getResidents();
                 break;
                 
             case 3:
-                uri= respondersUri;
-               
-        
+                users = getResponders();
+                
             default:
                 break;
         }
-        axios.get(uri,{
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }})
-        .then(response =>{
-            console.log(response.data)
-            dispatch(setUsers(response.data))
+        
+        users.then(user =>{
+            console.log(user)
+            dispatch(setUsers(user))
         })
         .catch(e=> {
             console.error(e);

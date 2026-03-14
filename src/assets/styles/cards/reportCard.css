@@ -1,0 +1,15 @@
+.report-card{
+    display: flex;
+    width: 400px;
+    flex-wrap: wrap;
+
+    
+    
+}
+
+.report-card div{
+    width: 100%;
+    
+    
+
+}

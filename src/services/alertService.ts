@@ -1,18 +1,5 @@
 import axios from "axios";
 
-
-;
-
-
-
-
-
-
-
-
-
-
-
 async function getAlerts(stateId: number): Promise<any> {
     let uri = `http://localhost:8080/admin/ndma-alerts/${stateId}/alerts`;
     
