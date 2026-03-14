@@ -11,6 +11,7 @@ import HelpRequestContainer from '../components/containers/HelpReqestContainer';
 import ReportsContainer from '../components/containers/ReportsContainer';
 import RescueTaskContainer from '../components/containers/RescueTaskContainer';
 import UsersContainer from '../components/containers/UsersContainer';
+import ResidentContainer from '../components/containers/ResidentContainer';
 
 
 function AppRoutes() {
@@ -25,9 +26,7 @@ function AppRoutes() {
 
             <Route path='/login' element={<Login />} />
             <Route path="/register" element={<Registration />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/resident" element={<Resident />} />
-            <Route path="/respondent" element={<Respondent />} />
+            
 
             <Route path="/admin" element= {<Admin/>}>
                 
@@ -37,6 +36,15 @@ function AppRoutes() {
                 <Route path="rescue-tasks" element={<RescueTaskContainer/>} />
                 <Route path="users" element={<UsersContainer/>} />
             
+            </Route>
+
+            <Route path='/resident' element={<Resident/>}>
+               <Route index element={<ResidentContainer/>}/>
+               <Route path='help-requests' element={<HelpRequestContainer/>}/>
+            </Route>
+            <Route path='/respondent' element={<Respondent/>}>
+               <Route index element={<ReportsContainer/>}/>
+               <Route path='rescue-tasks' element={<RescueTaskContainer/>}/>
             </Route>
 
 

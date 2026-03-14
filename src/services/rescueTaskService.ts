@@ -14,3 +14,18 @@ export async function getRescueTask (){
         }
          
 }
+
+export async function getResponderRescueTask() {
+    let uri = "http://localhost:8080/respondent/tasks"
+    try{
+            const response = await axios.get(uri, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }})
+            return response.data;
+        }
+        catch(e){
+            console.error('Error occurred while fetching '+ e);
+        }
+    
+}

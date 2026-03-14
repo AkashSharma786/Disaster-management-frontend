@@ -5,7 +5,7 @@ import { getRescueTask } from "../../services/rescueTaskService";
 import { setRescueTaskList } from "../../redux/slices/rescueTask";
 import { ReportCard } from "../Cards/ReportCard";
 import { setUsers } from "../../redux/slices/users";
-import { getAllReports, getReportsByRescueTask, getReportsByResponder } from "../../services/reportService";
+import { getAllReports, getReportsByRescueTask, getReportsByResponder, getResponderReports } from "../../services/reportService";
 import { setReportList } from "../../redux/slices/reportSlice";
 
 function ReportsContainer() {
@@ -18,6 +18,8 @@ function ReportsContainer() {
     const [selectedRescueTask, setSelectedRescueTask] = useState(0)
 
     const report = useSelector((state: any) => state.reports.reportList)
+    const userInfo = useSelector((state:any)=> state.auth.userInfo);
+
 
     const handleOptionFetching = () => {
         if (reportFectihingOption === 1) {
@@ -56,7 +58,8 @@ function ReportsContainer() {
     }
 
     useEffect(()=>{
-        handleOptionFetching();
+        if(userInfo.role === "ADMIN")
+            handleOptionFetching();
 
     }, [reportFectihingOption])
 
@@ -103,20 +106,33 @@ function ReportsContainer() {
 
     }
 
+    const handleRespondentGetReport= ()=>{
+        getResponderReports()
+        .then((data)=>{
+            console.log(data);
+            dispatch(setReportList(data))
+        })
+        .catch((error)=>{
+            console.error("Error fething reports" + error)
+        })
+
+
+    }
+
 
 
 
 
     return (<>
         <div className="container user-viewer">
-
-            <select name="" id="" className="select" onChange={(e) => {
+            {(userInfo.role === "ADMIN")?<select name="" id="" className="select" onChange={(e) => {
                 setReportFetchingOption(Number.parseInt(e.target.value))
             }}>
                 <option key={0} value={0}>All Reports</option>
                 <option key={1} value={1}>Using Responder</option>
                 <option key={2} value={2}>Using Rescue Task</option>
-            </select>
+            </select>: null}
+            
 
             {
                 (reportFectihingOption == 1) ? <select className="select" onChange={(e)=> setSelectedResponder(Number.parseInt(e.target.value))}>
@@ -134,7 +150,7 @@ function ReportsContainer() {
 
 
 
-            <button className="button" onClick={handleGetReport}>Get Reports</button>
+            <button className="button" onClick={(userInfo.role === "ADMIN")?handleGetReport : handleRespondentGetReport}>Get Reports</button>
 
         </div>
 

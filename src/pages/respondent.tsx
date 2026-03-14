@@ -1,16 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setUserInfo } from "../redux/slices/auth";
+import { RespondentNavbar } from "../components/common/RespondentNavBar";
+import { Outlet } from "react-router";
 
 function Respondent() {
-const dispatch = useDispatch();
-    const auth = useSelector((state: any) => state.auth);
 
-
-     function handleLogout() {
-        localStorage.removeItem('token');
-        dispatch(setUserInfo(null));
-
-    }
+    const auth = useSelector((state:any)=> state.auth);
 
     
     if(auth.isAuthenticated === false || auth.userInfo.role !== 'RESPONDENT') {
@@ -19,8 +14,9 @@ const dispatch = useDispatch();
     
 
     return (<>
-    <h1>Respondent Page</h1>
-     <button className="button" onClick={handleLogout}>Logout</button>
+        <RespondentNavbar/>
+        <Outlet/>
+     
     </>);
 }
 

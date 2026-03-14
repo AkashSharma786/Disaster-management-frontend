@@ -2,6 +2,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setUserInfo } from "../redux/slices/auth";
 import ResidentContainer from "../components/containers/ResidentContainer";
 import { Client } from "@stomp/stompjs";
+import { ResidentNavbar } from "../components/common/ResidentNavbar";
+import { Outlet } from "react-router";
 
 
 function Resident() {
@@ -14,19 +16,16 @@ const dispatch = useDispatch();
 
     const auth = useSelector((state: any) => state.auth);
     
-     function handleLogout() {
-        localStorage.removeItem('token');
-        dispatch(setUserInfo(null));
-    }
+   
      if(auth.isAuthenticated === false || auth.userInfo.role !== 'RESIDENT') {
         window.location.href = '/';
     }
   
 
     return (<>
-    <h1>Resident Page</h1>
-    <ResidentContainer/>
-     <button className="button" onClick={handleLogout}>Logout</button>
+    <ResidentNavbar/>
+    <Outlet/>
+    
     </>);
 }
 

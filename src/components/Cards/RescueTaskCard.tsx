@@ -1,6 +1,8 @@
+import { useSelector } from 'react-redux';
 import '../../assets/styles/cards/RescueTaskCard.css'
 
 export function RescueTaskCard({ rescueTask }: any) {
+    const userInfo = useSelector((state:any)=> state.auth.userInfo);
 
     const volunteers = rescueTask.volunteers 
 
@@ -33,33 +35,16 @@ export function RescueTaskCard({ rescueTask }: any) {
                     })
                 }
 
-
-
-
-{/* 
-                <div className='responder-box'>
-                    <p>Id: <strong>{rescueTask.volunteers[0].id}</strong></p>
-                    <p>Name: <strong>{rescueTask.volunteers[0].firstName} {rescueTask.volunteers[0].lastName} </strong></p>
-
-                </div>
-                <div className='responder-box'>
-                    <p>Id: <strong>{rescueTask.volunteers[0].id}</strong></p>
-                    <p>Name: <strong>{rescueTask.volunteers[0].firstName} {rescueTask.volunteers[0].lastName} </strong></p>
-
-                </div>
-                <div className='responder-box'>
-                    <p>Id: <strong>{rescueTask.volunteers[0].id}</strong></p>
-                    <p>Name: <strong>{rescueTask.volunteers[0].firstName} {rescueTask.volunteers[0].lastName} </strong></p>
-
-                </div> */}
-
-
-
             </div>
-            <div className='button-box'>
+            {(userInfo.role === "ADMIN")?
+             <div className='button-box'>
                 <button className='button delete-button'>Delete</button>
                 <button className='button'>Edit</button>
             </div>
+            :
+            <button className='button broadcast-button'> Submit Report</button>
+        }
+           
 
 
 

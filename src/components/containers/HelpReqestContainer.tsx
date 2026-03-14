@@ -2,9 +2,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getResidents } from "../../services/userService";
 import { setUsers } from "../../redux/slices/users";
 import { useEffect, useState } from "react";
-import { getAllRequests, getRequestsByResident } from "../../services/helpRequestService";
+import { getAllRequests, getRequestsByResident, getResidentRequests } from "../../services/helpRequestService";
 import { setHelpRequests } from "../../redux/slices/helpRequests";
-import { HelpRequestCard } from "../Cards/helpRequestCard";
+import { HelpRequestCard } from "../Cards/HelpRequestCard";
 
 
  function HelpRequestContainer() {
@@ -13,6 +13,9 @@ import { HelpRequestCard } from "../Cards/helpRequestCard";
     const [residents , setResidents]= useState<any>(null);
     const [residentsId, setResidentsId] = useState(0)
     const [requests, setRequests] = useState<any>(null);
+    const userInfo = useSelector((state:any)=> state.auth.userInfo);
+
+
 
     
     
@@ -33,11 +36,11 @@ import { HelpRequestCard } from "../Cards/helpRequestCard";
     
 
 
-
-    fetchResidents();
+    if(userInfo != null && userInfo.role === "ADMIN")
+        fetchResidents();
     },[])
 
-    console.log(residents)
+    //console.log(residents)
 
     const fetchRequests = async (residentId:number)=>{
         try{
@@ -52,8 +55,23 @@ import { HelpRequestCard } from "../Cards/helpRequestCard";
         }
     }
 
+    const fetchResidentRequests = async ()=>{
+        try {
+            const requestData = await getResidentRequests();
+            dispatch(setHelpRequests(requestData))
+            setRequests(requestData)
+            
+        } catch (error) {
+            
+        }
+
+    }
+
     const handleRequestGet = async ()=>{
-        await fetchRequests(residentsId);
+        if(userInfo != null && userInfo.role === "ADMIN")
+            await fetchRequests(residentsId);
+        else
+            await fetchResidentRequests();
         console.log(requests)
 
 
@@ -75,18 +93,21 @@ import { HelpRequestCard } from "../Cards/helpRequestCard";
     return (<>
         <div className="container user-viewer">
 
-
-            <select className="select" onChange={ (e)=> setResidentsId(Number.parseInt(e.target.value))} >
+            {(userInfo.role === "ADMIN")?<select className="select" onChange={ (e)=> setResidentsId(Number.parseInt(e.target.value))} >
                 <option key={0} value={0}> All Residents</option>
                 {residents?.map((item:any, index:number)=>{
                     return <option key={index +1} value={item.id}>{item.id} {item.firstName} {item.lastName}</option>
 
                 })}
 
-            </select>
+            </select>:null }
+
+
+            
 
 
             <button className="button" onClick={handleRequestGet}>Get</button>
+            {(userInfo.role !== "ADMIN")? <button className="button broadcast-button">Create Request</button>: null}
 
         </div>
         <div className="container user-viewer">

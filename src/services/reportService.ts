@@ -32,6 +32,22 @@ export async function getReportsByResponder(responderId:number)
     }
 }
 
+export async function getResponderReports()
+{
+    try {
+        const uri = `http://localhost:8080/respondent/reports`
+         const response = await axios.get(uri, {
+            headers:{Authorization: `Bearer ${localStorage.getItem('token')}`}
+        })
+
+        return  response.data;
+
+    } catch (error) {
+        console.error("Error Occurred while fetching reports"+ error)
+        
+    }
+}
+
 export async function getReportsByRescueTask(taskId:number)
 {
     try {

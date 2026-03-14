@@ -1,6 +1,6 @@
 
 import { NavLink } from "react-router";
-import '../../assets/styles/common/AdminNavbar.css'
+import '../../assets/styles/common/Navbar.css'
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "../../redux/slices/auth";
 import { RiLogoutBoxRLine } from "react-icons/ri";
@@ -18,7 +18,7 @@ const AdminNavbar = () => {
 
 
   return (
-    <nav className="admin-navbar ">
+    <nav className="navbar ">
       <div className="logo">Admin Dashboard</div>
 
       <div className="nav-links">

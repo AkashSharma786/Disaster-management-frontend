@@ -21,6 +21,22 @@ export async function getAllRequests() {
 
 }
 
+export async function getResidentRequests() {
+    const uri = `http://localhost:8080/resident/requests`
+
+    try{
+        const response = await axios.get(uri ,{
+        headers:{
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+    } )
+    return response.data;
+    }catch(e){
+        console.log("Error occurred while fetching Requests")
+    }
+    
+}
+
 export async function getRequestsByResident(residentId:number) {
     const uri = `http://localhost:8080/admin/requests/${residentId}`
 

@@ -1,6 +1,8 @@
+import { useSelector } from 'react-redux'
 import '../../assets/styles/cards/reportCard.css'
 
 export function ReportCard({report}:any){
+    const userInfo = useSelector((state:any)=> state.auth.userInfo);
     console.log(report)
     console.log(report.message)
 
@@ -22,9 +24,9 @@ export function ReportCard({report}:any){
                 <h3>{report.rescueTask.message}</h3>
             </div>
 
-          
-                <button className="button broadcast-button">Update task</button>
-                <button className="button delete-button">delete</button>
+          {(userInfo.role === "ADMIN")?<><button className="button broadcast-button">Update task</button>
+                <button className="button delete-button">delete</button></>: null}
+                
            
         
         </div>
