@@ -9,7 +9,7 @@ import { MessageCard } from "../Cards/MessageCard";
 
 export type childProps={
     showPopup : () => void,
-    rescueTask?:number
+    rescueTask?:number,
 };
  function HelpRequestContainer() {
     const dispatch = useDispatch();

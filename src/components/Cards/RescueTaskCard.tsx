@@ -4,6 +4,8 @@ import { MessageCard } from './MessageCard';
 import { useState } from 'react';
 import type { RescueTaskProp } from '../containers/RescueTaskContainer';
 import { deleteOneHelpRequest } from '../../redux/slices/helpRequests';
+import { deleteRescueTask } from '../../services/rescueTaskService';
+import { deleteOneRescueTask } from '../../redux/slices/rescueTask';
 
 export function RescueTaskCard({ rescueTask , showPopup, setSelectedRescueTask}:RescueTaskProp) {
     const userInfo = useSelector((state:any)=> state.auth.userInfo);
@@ -19,6 +21,21 @@ export function RescueTaskCard({ rescueTask , showPopup, setSelectedRescueTask}:
     
         }
 
+        function handleEdit(){
+            setSelectedRescueTask!(Number.parseInt(rescueTask.id))
+            showPopup!();
+        }
+
+        function handleDelete(){
+            deleteRescueTask(Number.parseInt(rescueTask.id))
+            .then((data)=>{
+                console.log(data)
+            })
+
+            dispatch(deleteOneRescueTask(rescueTask.id))
+
+        }
+
     return (<>
         <div className="container rescue-task-card">
             
@@ -27,13 +44,18 @@ export function RescueTaskCard({ rescueTask , showPopup, setSelectedRescueTask}:
             </div>
 
             <h2>Alert</h2>
+            
             <div className="container">
-
+                
                 <h3><strong>Id:  {rescueTask.alertItem.id}</strong></h3>
                 <h3>{rescueTask.alertItem.message}</h3>
+                
 
             </div>
-            <h2>Responders</h2>
+            
+            
+            <h3>status: <strong>{rescueTask.status}</strong> <br />Responders</h3>
+            
             <div className='container responders-container'>
 
                 {
@@ -55,8 +77,8 @@ export function RescueTaskCard({ rescueTask , showPopup, setSelectedRescueTask}:
             </div>
             {(userInfo.role === "ADMIN")?
              <div className='button-box'>
-                <button className='button delete-button'>Delete</button>
-                <button className='button'>Edit</button>
+                <button className='button delete-button' onClick={handleDelete}>Delete</button>
+                <button className='button' onClick={handleEdit}>Edit</button>
             </div>
             :
             <button className='button broadcast-button' onClick={handleReportSubmit}> Submit Report</button>

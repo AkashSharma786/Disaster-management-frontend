@@ -7,6 +7,7 @@ import { ReportCard } from "../Cards/ReportCard";
 import { setUsers } from "../../redux/slices/users";
 import { getAllReports, getReportsByRescueTask, getReportsByResponder, getResponderReports } from "../../services/reportService";
 import { setReportList } from "../../redux/slices/reportSlice";
+import { RescueTaskEditor } from "../Cards/RescueTaskEditor";
 
 function ReportsContainer() {
 
@@ -19,6 +20,11 @@ function ReportsContainer() {
 
     const report = useSelector((state: any) => state.reports.reportList)
     const userInfo = useSelector((state:any)=> state.auth.userInfo);
+    const [popup , setPopup] = useState(false)
+
+    function showPopup(){
+        setPopup(!popup)
+    }
 
 
     const handleOptionFetching = () => {
@@ -125,6 +131,7 @@ function ReportsContainer() {
 
     return (<>
         <div className="container user-viewer">
+            {(userInfo.role === "ADMIN") && popup && <RescueTaskEditor showPopup={showPopup} rescueTask={selectedRescueTask}/> }
             {(userInfo.role === "ADMIN")?<select name="" id="" className="select" onChange={(e) => {
                 setReportFetchingOption(Number.parseInt(e.target.value))
             }}>
@@ -157,7 +164,7 @@ function ReportsContainer() {
         <div className="container user-viewer">
 
             {report.map((item: any, index: number) =>
-                <ReportCard key={index} report={item} />
+                <ReportCard key={index} report={item} setSelectedRescueTask={setSelectedRescueTask}  showPopup={showPopup}/>
             )}
 
 

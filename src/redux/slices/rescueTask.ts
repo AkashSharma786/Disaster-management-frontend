@@ -11,9 +11,14 @@ const rescueTaskSlice = createSlice({
     reducers:{
         setRescueTaskList: (state, action)=>{
             state.rescueTaskList = action.payload;
+        },
+        deleteOneRescueTask: (state, action)=>{
+            state.rescueTaskList = state.rescueTaskList.filter((value:any)=>{
+                return value.id !== action.payload.id
+            })
         }
     }
 })
 
 export default rescueTaskSlice;
-export const { setRescueTaskList} = rescueTaskSlice.actions;
+export const { setRescueTaskList, deleteOneRescueTask} = rescueTaskSlice.actions;

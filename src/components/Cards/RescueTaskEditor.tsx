@@ -9,7 +9,8 @@ import { setAlerts } from '../../redux/slices/alert';
 import Select, { type Options } from 'react-select'
 import { getResponders } from '../../services/userService';
 import { setUsers } from '../../redux/slices/users';
-import { createRescueTask } from '../../services/rescueTaskService';
+import { createRescueTask, getRescueTask, getRescueTaskById, updateRescueTask } from '../../services/rescueTaskService';
+import { retry } from '@reduxjs/toolkit/query';
 
 
 
@@ -17,7 +18,7 @@ import { createRescueTask } from '../../services/rescueTaskService';
 
 
 
-export function RescueTaskEditor({ showPopup }: childProps) {
+export function RescueTaskEditor({ showPopup, rescueTask }: childProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [message, setMessage] = useState("");
     const [status, setStatus] = useState("CREATED")
@@ -26,56 +27,96 @@ export function RescueTaskEditor({ showPopup }: childProps) {
     const dispatch = useDispatch()
     const responders = useSelector((state: any) => state.users.userList)
     const [selectedResponders, setSelectedResponders] = useState<number[]>([])
+    const [selectedOptions, setSelectedOptions] = useState<ReadonlyArray<any>>([])
 
-    const [options, setOptins] = useState([])
+    const [isEditing, setIsEditing] = useState(false)
 
-
-
-
-
-
-
-
-
+    const [options, setOptions] = useState([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if (savedAlerts.length == 0) {
-            getSavedAlerts()
-                .then((data) => {
-                    dispatch(setAlerts(data))
-                })
-                .catch((error) => {
-                    console.error("Error occurred while fetching alerts")
-                })
+
+        async function loadData() {
+            try {
+
+                const alerts = await getSavedAlerts();
+                const users = await getResponders();
+
+                dispatch(setAlerts(alerts));
+                dispatch(setUsers(users));
+
+                const opts = users.map((item: any) => ({
+                    value: Number.parseInt(item.id),
+                    label: `${item.firstName} ${item.lastName} ${item.id}`
+                }));
+
+                setOptions(opts);
+                console.log(rescueTask)
+                if (rescueTask != undefined && rescueTask !== 0) {
+                    setIsEditing(true)
+                    console.log("Opened rescue task editor in Edit mode")
+                    const currentRescueTask = await getRescueTaskById(rescueTask)
+
+                    console.log(currentRescueTask)
+                    setSelectedAlertId(Number.parseInt(currentRescueTask.alertItem.id))
+                    console.log(currentRescueTask.alertItem.id, " Alert id")
+
+                    setMessage(currentRescueTask.message)
+                    console.log(message)
+
+                    console.log(currentRescueTask.status)
+
+                    setStatus(currentRescueTask.status)
+
+                    console.log(currentRescueTask.message)
+
+                    let arr:number[] = currentRescueTask.volunteers.map((value:any)=>{
+                        return Number.parseInt(value.id)
+                    })
+                    setSelectedResponders(arr)
+
+                    const currentResponders = opts.filter((item:any)=>{
+                        
+                        for(let i = 0; i < arr.length; i++)
+                        {
+                            if(item.value == arr.at(i))
+                                return true;
+                        }
+                        return false
+                    })
+
+                    setSelectedOptions(currentResponders)
+
+                    console.log(currentRescueTask.volunteers)
+
+                }
+
+            } catch (error) {
+                console.error("Error loading data", error);
+            } finally {
+                setLoading(false);
+            }
         }
-    }, [savedAlerts])
 
-    useEffect(() => {
-        getResponders()
-            .then((data) => {
-                dispatch(setUsers(data))
+        loadData();
 
-                setOptins(data.map((item: any) => {
-                    return {
-                        value: Number.parseInt(item.id),
-                        label: `${item.firstName} ${item.lastName} ${item.id}`
-                    }
-
-                }))
+    }, []);
 
 
-            })
-            .catch((error) => {
-                console.error("Erro occurred while fetching users " + error)
-            });
+    
 
 
-    }, [responders])
+
+
+
+
+
 
 
 
     function handleChange(value: ReadonlyArray<any>) {
         setSelectedResponders(value.map((value: any) => Number.parseInt(value.value)))
+        setSelectedOptions(value)
     }
 
 
@@ -96,37 +137,56 @@ export function RescueTaskEditor({ showPopup }: childProps) {
             document.removeEventListener("mousedown", handleClick);
         };
     }, [showPopup]);
-    
-    function handleCreate(){
-       
 
-        if(message.length < 10)
-        {
+    function handleCreate() {
+
+
+        if (message.length < 10) {
             alert("Length of message cannot be less than 10")
             return;
         }
-        if(selectedAlertId == 0)
-        {
+        if (selectedAlertId == 0) {
             alert("Please select a alert");
             return;
         }
-        if(selectedResponders.length == 0)
-        {
+        if (selectedResponders.length == 0) {
             alert("Please select some responders");
             return;
         }
 
         createRescueTask(message, status, selectedAlertId, selectedResponders)
-        .then((data)=>{
-            console.log(data)
-        })
-        .catch((error)=>{
-            console.error("Error occurred with creating rescue task");
-        })
+            .then((data) => {
+                console.log(data)
+                showPopup();
+            })
+            .catch((error) => {
+                console.error("Error occurred with creating rescue task");
+            })
 
 
         console.log("Rescue task created")
     }
+
+    function handleSave() {
+        console.log(message)
+        console.log(status)
+        console.log(selectedAlertId)
+        console.log(selectedResponders)
+        
+        if(rescueTask != undefined)
+        updateRescueTask( rescueTask, message, status, selectedAlertId, selectedResponders)
+        .then((data)=>{
+            console.log(data)
+            showPopup();
+        })
+
+
+    }
+
+
+
+    if (loading)
+        return <h1>Loading......</h1>
 
 
 
@@ -136,12 +196,12 @@ export function RescueTaskEditor({ showPopup }: childProps) {
             <h1>Create Rescue task</h1>
             <button className='button logout close-button' onClick={showPopup}><IoClose></IoClose></button>
             <label htmlFor="textarea"> message</label>
-            <textarea id='textarea' cols={30} rows={5} onChange={(e) => setMessage(e.target.value)}></textarea>
+            <textarea id='textarea' value={message} cols={30} rows={5} onChange={(e) => setMessage(e.target.value)}></textarea>
 
             <label htmlFor="status"> Status</label>
             <div id='status'>
                 <div>
-                    <input className='input' type="radio" id='created' name='status' value="CREATED" checked={status === "CREATED"} onChange={(e) => setStatus(e.target.value)} />
+                    <input className='input' type="radio" id='created' name='status' value="CREATED"  checked={status === "CREATED"} onChange={(e) => setStatus(e.target.value)} />
                     <label htmlFor="created">CREATED</label>
                 </div>
                 <div>
@@ -166,7 +226,7 @@ export function RescueTaskEditor({ showPopup }: childProps) {
 
             </div>
             <label htmlFor="alert">Alert</label>
-            <select className='select' id='alert' onChange={((e) => setSelectedAlertId(Number.parseInt(e.target.value))
+            <select className='select' id='alert' value={selectedAlertId} onChange={((e) => setSelectedAlertId(Number.parseInt(e.target.value))
             )}>
 
                 <option value={0}>------Select alert-----</option>
@@ -180,7 +240,7 @@ export function RescueTaskEditor({ showPopup }: childProps) {
 
             <label htmlFor="responders">Responders</label>
             <Select
-                defaultValue={selectedResponders}
+                value={selectedOptions}
                 options={options}
                 isMulti={true}
                 onChange={handleChange}
@@ -190,7 +250,7 @@ export function RescueTaskEditor({ showPopup }: childProps) {
 
             </Select>
 
-            <button className="broadcast-button button" onClick={handleCreate}>Create</button>
+            <button className="broadcast-button button" onClick={(isEditing) ? handleSave : handleCreate}>{(isEditing) ? "Save" : "Create"}</button>
 
 
 

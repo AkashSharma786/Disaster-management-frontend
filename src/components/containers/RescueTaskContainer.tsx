@@ -27,6 +27,12 @@ function RescueTaskContainer() {
     function showPopup(){
             setPopup(!popup)
         }
+    
+    function showRescuTaskCreator(){
+        setSelectedRescueTask(0)
+        showPopup();
+    }
+   
 
     async function handleGet() {
 
@@ -55,7 +61,7 @@ function RescueTaskContainer() {
         <div className="container  user-viewer">
             {(userInfo.role !== "ADMIN") && popup && <MessageCard showPopup={showPopup} rescueTask={selectedRescueTask}/>}
 
-            {(userInfo.role === "ADMIN") && popup && <RescueTaskEditor showPopup={showPopup}/>}
+            {(userInfo.role === "ADMIN") && popup && <RescueTaskEditor showPopup={showPopup} rescueTask={selectedRescueTask}/>}
             
 
             {(userInfo.role === "ADMIN") ?
@@ -75,7 +81,7 @@ function RescueTaskContainer() {
 
             <button className="button" onClick={(userInfo.role === "ADMIN")?handleGet : handleResponderGet}> Get</button>
             {(userInfo.role === "ADMIN")?
-            <button className="button broadcast-button" onClick={showPopup}> Create </button>: null
+            <button className="button broadcast-button" onClick={showRescuTaskCreator}> Create </button>: null
             
         }
             

@@ -3,8 +3,16 @@ import '../../assets/styles/cards/reportCard.css'
 import { deleteSavedAlert } from '../../services/alertService';
 import { deleteReport } from '../../services/reportService';
 import { deleteOneReport } from '../../redux/slices/reportSlice';
+import type { childProps } from '../containers/HelpReqestContainer';
 
-export function ReportCard({report}:any){
+type ReportProp ={
+    report:any,
+    showPopup?: ()=>void,
+    setSelectedRescueTask?:(num:number)=>void
+
+}
+
+export function ReportCard({report, showPopup, setSelectedRescueTask}:ReportProp){
     const userInfo = useSelector((state:any)=> state.auth.userInfo);
     const dispatch = useDispatch()
     console.log(report)
@@ -22,6 +30,14 @@ export function ReportCard({report}:any){
         })
 
     }
+
+    const handleUpdate = ()=>{
+        setSelectedRescueTask!(Number.parseInt(report.rescueTask.id))
+        showPopup!()
+
+    }
+
+
 
 
     return(<>
@@ -41,7 +57,7 @@ export function ReportCard({report}:any){
                 <h3>{report.rescueTask.message}</h3>
             </div>
 
-          {(userInfo.role === "ADMIN")?<><button className="button broadcast-button">Update task</button>
+          {(userInfo.role === "ADMIN")?<><button className="button broadcast-button" onClick={handleUpdate}>Update task</button>
                 <button className="button delete-button" onClick={handleDelete}>delete</button></>: null}
                 
            
