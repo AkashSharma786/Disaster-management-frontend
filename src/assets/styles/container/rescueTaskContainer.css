@@ -1,5 +1,7 @@
 .task-viewer{
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
-    height: 63vh;
-    width: 60%;
+   
+    width: 70%;
 }

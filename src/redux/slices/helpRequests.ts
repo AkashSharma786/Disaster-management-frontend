@@ -10,10 +10,17 @@ const helpRequestSlice = createSlice({
 
         setHelpRequests:(state, action)=>{
             state.helpRequestList = action.payload;
+        },
+
+        deleteOneHelpRequest: (state, action)=>{
+            state.helpRequestList = state.helpRequestList.filter((value:any)=>{
+                return value.id !== action.payload.id
+            })
+
         }
     }
 
 })
 
-export const {setHelpRequests} = helpRequestSlice.actions
+export const {setHelpRequests, deleteOneHelpRequest} = helpRequestSlice.actions
 export default  helpRequestSlice;

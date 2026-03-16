@@ -1,13 +1,27 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import '../../assets/styles/cards/RescueTaskCard.css'
+import { MessageCard } from './MessageCard';
+import { useState } from 'react';
+import type { RescueTaskProp } from '../containers/RescueTaskContainer';
+import { deleteOneHelpRequest } from '../../redux/slices/helpRequests';
 
-export function RescueTaskCard({ rescueTask }: any) {
+export function RescueTaskCard({ rescueTask , showPopup, setSelectedRescueTask}:RescueTaskProp) {
     const userInfo = useSelector((state:any)=> state.auth.userInfo);
-
     const volunteers = rescueTask.volunteers 
+    const dispatch = useDispatch();
+    
+    
+        function handleReportSubmit(){
+             setSelectedRescueTask!(Number.parseInt(rescueTask.id))
+             dispatch(deleteOneHelpRequest(rescueTask))
+            
+            showPopup!();
+    
+        }
 
     return (<>
         <div className="container rescue-task-card">
+            
             <div>
                 <h2>{rescueTask.message}</h2>
             </div>
@@ -25,6 +39,9 @@ export function RescueTaskCard({ rescueTask }: any) {
                 {
                     volunteers.map((item: any, index: number) => {
                         console.log(item);
+
+                        
+                           
                          
                        return <div className='responder-box' key={index}>
                             <p>Id: <strong>{item.id}</strong></p>
@@ -42,7 +59,7 @@ export function RescueTaskCard({ rescueTask }: any) {
                 <button className='button'>Edit</button>
             </div>
             :
-            <button className='button broadcast-button'> Submit Report</button>
+            <button className='button broadcast-button' onClick={handleReportSubmit}> Submit Report</button>
         }
            
 

@@ -5,19 +5,23 @@ import { useEffect, useState } from "react";
 import { getAllRequests, getRequestsByResident, getResidentRequests } from "../../services/helpRequestService";
 import { setHelpRequests } from "../../redux/slices/helpRequests";
 import { HelpRequestCard } from "../Cards/HelpRequestCard";
+import { MessageCard } from "../Cards/MessageCard";
 
-
+export type childProps={
+    showPopup : () => void,
+    rescueTask?:number
+};
  function HelpRequestContainer() {
     const dispatch = useDispatch();
 
     const [residents , setResidents]= useState<any>(null);
     const [residentsId, setResidentsId] = useState(0)
-    const [requests, setRequests] = useState<any>(null);
+ 
     const userInfo = useSelector((state:any)=> state.auth.userInfo);
+    const [popup, setPopup] = useState(false)
+    const requests = useSelector((state:any)=> state.helpRequests.helpRequestList)
 
 
-
-    
     
 
     useEffect(  ()=> {
@@ -47,7 +51,7 @@ import { HelpRequestCard } from "../Cards/HelpRequestCard";
             const requestData = (residentId === 0)? await getAllRequests()
                                 : await getRequestsByResident(residentId);
             dispatch(setHelpRequests(requestData));
-            setRequests(requestData);
+         
 
         }
         catch(e){
@@ -59,7 +63,7 @@ import { HelpRequestCard } from "../Cards/HelpRequestCard";
         try {
             const requestData = await getResidentRequests();
             dispatch(setHelpRequests(requestData))
-            setRequests(requestData)
+            
             
         } catch (error) {
             
@@ -77,6 +81,15 @@ import { HelpRequestCard } from "../Cards/HelpRequestCard";
 
     }
 
+     function showPopup(){
+        setPopup(!popup)
+
+    }
+
+ 
+
+    
+
 
 
 
@@ -92,6 +105,7 @@ import { HelpRequestCard } from "../Cards/HelpRequestCard";
 
     return (<>
         <div className="container user-viewer">
+            {popup &&<MessageCard showPopup={showPopup}/>}
 
             {(userInfo.role === "ADMIN")?<select className="select" onChange={ (e)=> setResidentsId(Number.parseInt(e.target.value))} >
                 <option key={0} value={0}> All Residents</option>
@@ -107,7 +121,8 @@ import { HelpRequestCard } from "../Cards/HelpRequestCard";
 
 
             <button className="button" onClick={handleRequestGet}>Get</button>
-            {(userInfo.role !== "ADMIN")? <button className="button broadcast-button">Create Request</button>: null}
+            {(userInfo.role !== "ADMIN")? <button className="button broadcast-button"  onClick={showPopup} >Create Request</button>: null}
+            
 
         </div>
         <div className="container user-viewer">
@@ -119,6 +134,7 @@ import { HelpRequestCard } from "../Cards/HelpRequestCard";
 
 
         </div>
+        
 
 
     </>)

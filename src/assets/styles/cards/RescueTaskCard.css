@@ -2,10 +2,8 @@
     display: flex;
    flex-wrap: wrap;
     width: 60%;
-    height: 450px;
+   
     flex-direction: row;
-    
-
 }
 
 .responders-container{

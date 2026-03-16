@@ -1,3 +1,5 @@
 .help-request{
     display: flex;
+    min-width: 700px;
+    flex-wrap: wrap;
 }

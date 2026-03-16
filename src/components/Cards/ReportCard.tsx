@@ -1,10 +1,27 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import '../../assets/styles/cards/reportCard.css'
+import { deleteSavedAlert } from '../../services/alertService';
+import { deleteReport } from '../../services/reportService';
+import { deleteOneReport } from '../../redux/slices/reportSlice';
 
 export function ReportCard({report}:any){
     const userInfo = useSelector((state:any)=> state.auth.userInfo);
+    const dispatch = useDispatch()
     console.log(report)
     console.log(report.message)
+
+    const handleDelete = ()=>{
+        deleteReport(Number.parseInt(report.id))
+
+        .then((data)=>{
+            console.log("Deleted " + data)
+            dispatch(deleteOneReport(report))
+        })
+        .catch((e)=>{
+            console.error("Error Deleting " + e)
+        })
+
+    }
 
 
     return(<>
@@ -25,7 +42,7 @@ export function ReportCard({report}:any){
             </div>
 
           {(userInfo.role === "ADMIN")?<><button className="button broadcast-button">Update task</button>
-                <button className="button delete-button">delete</button></>: null}
+                <button className="button delete-button" onClick={handleDelete}>delete</button></>: null}
                 
            
         
