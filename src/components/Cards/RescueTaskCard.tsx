@@ -15,8 +15,7 @@ export function RescueTaskCard({ rescueTask , showPopup, setSelectedRescueTask}:
     
         function handleReportSubmit(){
              setSelectedRescueTask!(Number.parseInt(rescueTask.id))
-             dispatch(deleteOneHelpRequest(rescueTask))
-            
+
             showPopup!();
     
         }

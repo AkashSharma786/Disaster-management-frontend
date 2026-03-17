@@ -14,7 +14,9 @@ const rescueTaskSlice = createSlice({
         },
         deleteOneRescueTask: (state, action)=>{
             state.rescueTaskList = state.rescueTaskList.filter((value:any)=>{
-                return value.id !== action.payload.id
+                console.log("rescue Task id" + action.payload)
+                console.log("comparison value" , value.id === action.payload)
+                return value.id !== action.payload
             })
         }
     }

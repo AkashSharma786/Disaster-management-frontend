@@ -6,11 +6,14 @@ import { getAllRequests, getRequestsByResident, getResidentRequests } from "../.
 import { setHelpRequests } from "../../redux/slices/helpRequests";
 import { HelpRequestCard } from "../Cards/HelpRequestCard";
 import { MessageCard } from "../Cards/MessageCard";
+import { RescueTaskEditor } from "../Cards/RescueTaskEditor";
 
 export type childProps={
     showPopup : () => void,
     rescueTask?:number,
 };
+
+
  function HelpRequestContainer() {
     const dispatch = useDispatch();
 
@@ -106,6 +109,7 @@ export type childProps={
     return (<>
         <div className="container user-viewer">
             {popup &&<MessageCard showPopup={showPopup}/>}
+            {(userInfo.role === "ADMIN") && popup && <RescueTaskEditor showPopup={showPopup}/>}
 
             {(userInfo.role === "ADMIN")?<select className="select" onChange={ (e)=> setResidentsId(Number.parseInt(e.target.value))} >
                 <option key={0} value={0}> All Residents</option>
@@ -127,7 +131,7 @@ export type childProps={
         </div>
         <div className="container user-viewer">
             {requests?.map((item:any, index:number)=>{
-                return <HelpRequestCard key={index} request={item}/>
+                return <HelpRequestCard key={index} request={item} showPopup={showPopup} />
 
             })}
 

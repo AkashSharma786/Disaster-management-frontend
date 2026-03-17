@@ -3,9 +3,16 @@ import '../../assets/styles/cards/HelpRequestCard.css'
 import { deleteHelpRequest } from '../../services/helpRequestService';
 import { deleteOneHelpRequest } from '../../redux/slices/helpRequests';
 
-export function HelpRequestCard({request}:any){
+type rescueProp ={
+    request:any,
+    showPopup: ()=>void
+}
+
+export function HelpRequestCard({request , showPopup}:rescueProp){
     const userInfo = useSelector((state:any)=> state.auth.userInfo);
     const dispatch = useDispatch();
+
+
     function handleDelete(){
         
         deleteHelpRequest(Number.parseInt(request.id))
@@ -20,6 +27,8 @@ export function HelpRequestCard({request}:any){
 
     }
 
+    
+
     return (<>
     
        <div className="container help-request">
@@ -29,7 +38,7 @@ export function HelpRequestCard({request}:any){
         
         <div ><h2>{request.user.firstName} {request.user.lastName}</h2></div>
 
-        {(userInfo.role === "ADMIN")? <><button className="button">Rescue </button>
+        {(userInfo.role === "ADMIN")? <><button className="button" onClick={showPopup}>Rescue </button>
 
         <button className="button delete-button" onClick={handleDelete}> delete</button></>: null}
        </div>
